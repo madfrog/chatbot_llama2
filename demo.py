@@ -7,7 +7,7 @@ from langchain.embeddings import HuggingFaceInstructEmbeddings
 
 from langchain import HuggingFacePipeline
 from langchain import PromptTemplate,  LLMChain
-from transformers import AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from langchain.document_loaders import PyPDFLoader
 from transformers import pipeline
 import json
@@ -69,7 +69,7 @@ def main():
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=0)
     splitted_docs = text_splitter.split_documents(pdf_loader.load())
 
-    EMBEDDING_MODEL_NAME = "hkunlp/instructor-large"
+    EMBEDDING_MODEL_NAME = "/mnt/h/instructor-large"
     embeddings = HuggingFaceInstructEmbeddings(
         model_name=EMBEDDING_MODEL_NAME,
         model_kwargs={"device": "cuda"},
@@ -97,6 +97,7 @@ def main():
         do_sample=True,
         top_k=30,
         num_return_sequences=1,
+        tokenizer=tokenizer,
         eos_token_id = tokenizer.eos_token_id
     )
 
